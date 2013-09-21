@@ -574,6 +574,8 @@ BOOLEAN btif_hh_copy_hid_info(tBTA_HH_DEV_DSCP_INFO* dest , tBTA_HH_DEV_DSCP_INF
     dest->product_id = src->product_id;
     dest->version    = src->version;
     dest->ctry_code  = src->ctry_code;
+    dest->ssr_max_latency  = src->ssr_max_latency;
+    dest->ssr_min_tout  = src->ssr_min_tout;
     return TRUE;
 }
 
@@ -1837,7 +1839,7 @@ bt_status_t btif_hh_execute_service(BOOLEAN b_enable)
      if (b_enable)
      {
           /* Enable and register with BTA-HH */
-          BTA_HhEnable(BTA_SEC_NONE, bte_hh_evt);
+          BTA_HhEnable(BTA_SEC_ENCRYPT, bte_hh_evt);
      }
      else {
          /* Disable HH */

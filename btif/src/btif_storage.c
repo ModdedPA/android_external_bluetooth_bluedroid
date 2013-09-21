@@ -864,14 +864,9 @@ bt_status_t btif_storage_load_bonded_devices(void)
         num_props++;
 
         /* SCAN_MODE */
-        /* TODO: At the time of BT on, always report the scan mode as 0 irrespective
-         of the scan_mode during the previous enable cycle.
-         This needs to be re-visited as part of the app/stack enable sequence
-         synchronization */
-        mode = BT_SCAN_MODE_NONE;
-        adapter_props[num_props].type = BT_PROPERTY_ADAPTER_SCAN_MODE;
-        adapter_props[num_props].len = sizeof(mode);
-        adapter_props[num_props].val = &mode;
+        BTIF_STORAGE_GET_ADAPTER_PROP(BT_PROPERTY_ADAPTER_SCAN_MODE,
+                                      &mode, sizeof(mode),
+                                      adapter_props[num_props]);
         num_props++;
 
         /* DISC_TIMEOUT */
@@ -1385,6 +1380,7 @@ bt_status_t btif_storage_add_hid_device_info(bt_bdaddr_t *remote_bd_addr,
     btif_config_set_int("Remote", bdstr, "priority", priority);
     if(dl_len > 0)
         btif_config_set("Remote", bdstr, "HidDescriptor", (const char*)dsc_list, dl_len, BTIF_CFG_TYPE_BIN);
+    btif_config_save();
     return BT_STATUS_SUCCESS;
 }
 
@@ -1406,6 +1402,7 @@ bt_status_t btif_storage_add_device_priority(bt_bdaddr_t *remote_bd_addr,
     bdstr_t bdstr;
     bd2str(remote_bd_addr, &bdstr);
     btif_config_set_int("Remote", bdstr, "priority", priority);
+    btif_config_save();
     return BT_STATUS_SUCCESS;
 }
 
@@ -1464,16 +1461,13 @@ bt_status_t btif_storage_load_bonded_hid_info(void)
             dscp_info.ctry_code = (uint8_t) value;
 
             btif_config_get_int("Remote", kname, "ssrmaxlat", &value);
-            dscp_info.ssr_max_latency = (uint8_t) value;
+            dscp_info.ssr_max_latency = (uint16_t) value;
 
             btif_config_get_int("Remote", kname, "ssrmintout", &value);
-            dscp_info.ssr_min_tout = (uint8_t) value;
+            dscp_info.ssr_min_tout = (uint16_t) value;
 
             btif_config_get_int("Remote", kname, "priority", &value);
             priority = value;
-
-            btif_config_get_int("Remote", kname, "ssrmintout", &value);
-            dscp_info.ssr_min_tout = (uint8_t) value;
 
             int len = 0;
             int type;
@@ -1522,7 +1516,10 @@ bt_status_t btif_storage_remove_hid_info(bt_bdaddr_t *remote_bd_addr)
     btif_config_remove("Remote", bdstr, "HidVersion");
     btif_config_remove("Remote", bdstr, "HidCountryCode");
     btif_config_remove("Remote", bdstr, "HidDescriptor");
+    btif_config_remove("Remote", bdstr, "ssrmaxlat");
+    btif_config_remove("Remote", bdstr, "ssrmintout");
     btif_config_remove("Remote", bdstr, "priority");
+    btif_config_save();
     return BT_STATUS_SUCCESS;
 }
 
