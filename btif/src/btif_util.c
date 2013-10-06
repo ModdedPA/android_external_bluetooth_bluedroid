@@ -96,8 +96,8 @@ char *bd2str(const bt_bdaddr_t *bdaddr, bdstr_t *bdstr)
     char *addr = (char *) bdaddr->address;
 
     sprintf((char*)bdstr, "%02x:%02x:%02x:%02x:%02x:%02x",
-                       (int)addr[0],(int)addr[1],(int)addr[2],
-                       (int)addr[3],(int)addr[4],(int)addr[5]);
+                       (uint8_t)addr[0], (uint8_t)addr[1], (uint8_t)addr[2],
+                       (uint8_t)addr[3], (uint8_t)addr[4], (uint8_t)addr[5]);
     return (char *)bdstr;
 }
 
@@ -245,6 +245,7 @@ const char* dump_property_type(bt_property_type_t type)
         CASE_RETURN_STR(BT_PROPERTY_ADAPTER_BONDED_DEVICES)
         CASE_RETURN_STR(BT_PROPERTY_ADAPTER_SCAN_MODE)
         CASE_RETURN_STR(BT_PROPERTY_REMOTE_FRIENDLY_NAME)
+        CASE_RETURN_STR(BT_PROPERTY_REMOTE_TRUST_VALUE)
 
         default:
             return "UNKNOWN PROPERTY ID";

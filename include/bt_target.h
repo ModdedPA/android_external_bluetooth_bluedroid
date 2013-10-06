@@ -54,6 +54,15 @@
 
 
 //------------------Added from Bluedroid buildcfg.h---------------------
+/* This feature is used to update any QCOM related changes in the stack*/
+#ifndef BLUETOOTH_QCOM_SW
+#define BLUETOOTH_QCOM_SW FALSE
+#endif
+
+#ifndef I2SPCM_SLAVE_BRCM
+#define I2SPCM_SLAVE_BRCM FALSE
+#endif
+
 #ifndef UNV_INCLUDED
 #define UNV_INCLUDED FALSE
 #endif
@@ -845,9 +854,24 @@ and USER_HW_DISABLE_API macros */
 #define BTM_SCO_HCI_INCLUDED            FALSE       /* TRUE includes SCO over HCI code */
 #endif
 
+#if (BLUETOOTH_QCOM_SW == TRUE) /* Enable WBS only under this flag.*/
+#define BTM_WBS_INCLUDED            TRUE
+#define BLUETOOTH_QCOM_SW           TRUE
+#define BTC_INCLUDED                TRUE
+#else
 /* Includes WBS if TRUE */
 #ifndef BTM_WBS_INCLUDED
 #define BTM_WBS_INCLUDED            FALSE       /* TRUE includes WBS code */
+#endif
+/* This feature is used to eanble QCOM interleaved scan*/
+#ifndef BLUETOOTH_QCOM_LE_INTL_SCAN
+#define BLUETOOTH_QCOM_LE_INTL_SCAN FALSE
+#endif
+/* BTC */
+#ifndef BTC_INCLUDED
+#define BTC_INCLUDED FALSE
+#endif
+
 #endif
 
 /* Includes PCM2 support if TRUE */
@@ -2157,6 +2181,11 @@ Range: Minimum 12000 (12 secs) on BR/EDR when supporting PBF.
 #define PAN_NAP_SECURITY_LEVEL           0
 #endif
 
+/*This ensures that PANU Service record will not be advertised on SDP */
+#ifndef PAN_ALWAYS_NAP_NO_PANU_ON_SDP
+#define PAN_ALWAYS_NAP_NO_PANU_ON_SDP TRUE
+#endif
+
 
 
 
@@ -2837,7 +2866,7 @@ Range: Minimum 12000 (12 secs) on BR/EDR when supporting PBF.
 #endif
 
 #ifndef HID_HOST_MAX_CONN_RETRY
-#define HID_HOST_MAX_CONN_RETRY     (3)
+#define HID_HOST_MAX_CONN_RETRY     (1)
 #endif
 
 #ifndef HID_HOST_REPAGE_WIN
